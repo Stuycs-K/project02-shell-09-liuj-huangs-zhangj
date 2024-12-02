@@ -1,9 +1,9 @@
 .PHONY: compile clean run
-compile: main.o
-	@gcc -o main main.o
-main.o: main.c
-	@gcc -c main.c -Wall
+compile: shell.o
+	@gcc -o shell shell.o
+shell.o: shell.c
+	@gcc -c shell.c -Wall
 run:
-	@./main
+	@./shell
 clean:
-	@rm -f *.o main
+	@rm -f *.o shell
