@@ -15,12 +15,15 @@ void parse_args( char * line, char ** arg_ary ){
 
 int main(){
   char buffer[256];
-  while(fgets(buffer, 255, stdin)){ // awaiting more inputs
+  char cwd[256];
+  while(1){ // awaiting more inputs
+    getcwd(cwd, sizeof(cwd));
+    printf("%s $", cwd);
+    fgets(buffer, 255, stdin);
     char* copy = (char *) malloc(256);
     strcpy(copy, buffer);
-
     char* function;
-    while((function = strsep(&copy, ";"))){ // splitting into multipl functions
+    while((function = strsep(&copy, ";"))){ // splitting into multiple functions
       char* args[100];
       parse_args(function, args);
       pid_t child; // making child to sacrifice to function
