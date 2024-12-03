@@ -19,7 +19,6 @@ int main(){
   while(1){ // awaiting more inputs
     getcwd(cwd, sizeof(cwd));
     printf("%s $", cwd);
-    fflush(stdout);
     fgets(buffer, 255, stdin);
     char* copy = (char *) malloc(256);
     strcpy(copy, buffer);
@@ -34,6 +33,7 @@ int main(){
         exit(1);
       }
       if(child == 0){
+        fflush(stdout);
         execvp(args[0], args); // child running function
       }
       else{
