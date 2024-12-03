@@ -33,7 +33,9 @@ int main(){
         exit(1);
       }
       if(child == 0){
+        printf("%s %s\n", args[0], args[1]);
         execvp(args[0], args); // child running function
+        printf("execvp failed");
       }
       else{
         wait(NULL); // awaiting child death
