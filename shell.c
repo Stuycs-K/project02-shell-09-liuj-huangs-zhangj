@@ -13,11 +13,31 @@ void parse_args( char * line, char ** arg_ary ){
   }
 }
 
+void printPath(){
+  char currCwd[256];
+  char homeCwd[256];
+  getcwd(currCwd, sizeof(currCwd));
+  chdir(getenv("HOME"));
+  getcwd(homeCwd, sizeof(homeCwd));
+  chdir(currCwd);
+  if (strlen(currCwd) < strlen(homeCwd)){
+    printf("%s $", currCwd);
+  }
+  else{
+    // char* shortCwd = "~/";
+    // char* currCwd2;
+    // strcpy(currCwd2, currCwd);
+    // printf("%s\n",currCwd2);
+    // char* temp;
+    // temp = strsep(&currCwd2, homeCwd);
+    // strcat(shortCwd, temp);
+    // printf("%s $", shortCwd);
+  }
+}
+
 int main(){
   char buffer[256];
-  char cwd[256];
-  getcwd(cwd, sizeof(cwd));
-  printf("%s $", cwd);
+  printPath();
   fgets(buffer, 255, stdin);
   char* copy = (char *) malloc(256);
   sscanf(buffer, "%[^\n]", copy);
