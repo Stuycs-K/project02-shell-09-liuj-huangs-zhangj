@@ -22,7 +22,7 @@ int main(){
     fgets(buffer, 255, stdin);
     char* copy = (char *) malloc(256);
     strcpy(copy, buffer);
-    printf("s\n", copy);
+    printf("%s\n", copy);
     char* function;
     while((function = strsep(&copy, ";"))){ // splitting into multiple functions
       char* args[100];
