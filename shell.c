@@ -20,7 +20,7 @@ int main(){
     getcwd(cwd, sizeof(cwd));
     printf("%s $", cwd);
     fflush(stdout);
-    fgets(buffer, 255, stdin)
+    fgets(buffer, 255, stdin);
     char* copy = (char *) malloc(256);
     strcpy(copy, buffer);
     char* function;
