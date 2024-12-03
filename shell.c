@@ -13,16 +13,9 @@ void parse_args( char * line, char ** arg_ary ){
   }
 }
 
-int main(){
-  char buffer[256];
-  char cwd[256];
-  getcwd(cwd, sizeof(cwd));
-  printf("%s $", cwd);
-  fgets(buffer, 255, stdin);
-  char* copy = (char *) malloc(256);
-  sscanf(buffer, "%[^\n]", copy);
+void execute(char* string){
   char* function;
-  while((function = strsep(&copy, ";"))){ // splitting into multiple functions
+  while((function = strsep(&string, ";"))){ // splitting into multiple functions
     char* args[100];
     parse_args(function, args);
     pid_t child; // making child to sacrifice to function
@@ -43,6 +36,25 @@ int main(){
       wait(NULL); // awaiting child death
     }
   }
+}
+
+char *takeInput(){
+  char buffer[256];
+  fgets(buffer, 255, stdin);
+  char* copy = (char *) malloc(256);
+  sscanf(buffer, "%[^\n]", copy);
+  return copy;
+}
+
+int main(){
+  char cwd[256];
+  getcwd(cwd, sizeof(cwd));
+  printf("%s $", cwd);
+  // taking input
+  char *input;
+  input = takeInput();
+  // executing method
+  execute(input);
   return 0;
 }
 
