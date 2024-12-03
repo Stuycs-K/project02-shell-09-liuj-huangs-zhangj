@@ -35,42 +35,50 @@ void cd(char* path){
   chdir(path);
 }
 
-int main(){
-  while (1){
-    char buffer[256];
-    printPath();
-    fgets(buffer, 255, stdin);
-    char* copy = (char *) malloc(256);
-    sscanf(buffer, "%[^\n]", copy);
-    char* function;
-    while((function = strsep(&copy, ";"))){ // splitting into multiple functions
-      char* args[100];
-      parse_args(function, args);
-      pid_t child; // making child to sacrifice to function
-      child = fork();
-      if(child<0){ // error handling
-          perror("fork fail1");
-          exit(1);
-      }
-      if(child == 0){
-        if (strcmp(args[0], "cd") == 0){
-          chdir(args[1]);
-        }
-        else{
-          int exec;
-          exec = execvp(args[0], args); // child running function
-          if(exec<0){ // error handling
-            perror("fork fail2");
-            exit(1);
-          }
-        }
-      }
-      else{
-        wait(NULL); // awaiting child death
+void execute(char* string){
+  char* function;
+  while((function = strsep(&string, ";"))){ // splitting into multiple functions
+    char* args[100];
+    parse_args(function, args);
+    pid_t child; // making child to sacrifice to function
+    child = fork();
+    if(child<0){ // error handling
+      perror("fork fail");
+      exit(1);
+    }
+    if(child == 0){
+      int exec;
+      exec = execvp(args[0], args); // child running function
+      if(exec<0){ // error handling
+        perror("fork fail");
+        exit(1);
       }
     }
-    free(copy);
-    free(function);
+    else{
+      wait(NULL); // awaiting child death
+    }
+  }
+}
+
+char *takeInput(){
+  char buffer[256];
+  fgets(buffer, 255, stdin);
+  char* copy = (char *) malloc(256);
+  sscanf(buffer, "%[^\n]", copy);
+  return copy;
+}
+
+int main(){
+  while (1){
+    printPath();
+    // taking input
+    char *input;
+    input = takeInput();
+    // executing method
+    execute(input);
   }
   return 0;
 }
+
+// chdir(): Change Current Directory
+// getcwd(): Get Current Directory
