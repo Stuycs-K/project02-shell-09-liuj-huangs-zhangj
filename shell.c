@@ -22,7 +22,6 @@ int main(){
     fgets(buffer, 255, stdin);
     char* copy = (char *) malloc(256);
     strcpy(copy, buffer);
-    printf("%s\n", copy);
     char* function;
     while((function = strsep(&copy, ";"))){ // splitting into multiple functions
       char* args[100];
@@ -34,7 +33,6 @@ int main(){
         exit(1);
       }
       if(child == 0){
-        fflush(stdout);
         execvp(args[0], args); // child running function
       }
       else{
