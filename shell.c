@@ -39,3 +39,6 @@ int main(){
   }
   return 0;
 }
+
+// chdir(): Change Current Directory
+// getcwd(): Get Current Directory
