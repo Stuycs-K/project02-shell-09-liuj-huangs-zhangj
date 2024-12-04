@@ -6,11 +6,12 @@
 #include <errno.h>
 #include <string.h>
 
-void parse_args( char * line, char ** arg_ary ){
+int parse_args( char * line, char ** arg_ary ){
   int counter = 0;
   while((arg_ary[counter] = strsep(&line, " "))){
     counter++;
   }
+  return counter;
 }
 
 void printPath(){
@@ -39,11 +40,18 @@ void cd(char* path){
   chdir(path);
 }
 
+void redirStdout(char* path){
+  int fd1 = open(path, O_WRONLY);
+  dup(1);
+  dup2(1, fd1);
+}
+
 void execute(char* string){
   char* function;
+  int argsLen;
   while((function = strsep(&string, ";"))){ // splitting into multiple functions
     char* args[100];
-    parse_args(function, args);
+    argsLen = parse_args(function, args);
     if(strcmp(args[0], "exit") == 0){ // exit command exit
       exit(0);
     }
@@ -54,6 +62,21 @@ void execute(char* string){
       exit(1);
     }
     if(child == 0){
+      char* cmd;
+      for (int i = 0; i<argsLen; i++){
+        strcat(cmd, args[i]);
+        if (args[i] == '>'){
+          char* path;
+          path = args[i+1];
+          redirStdout(path);
+        }
+      }
+      int exec;
+      exec = execvp(args[0], args); // child running function
+      if(exec<0){ // error handling
+        perror("fork fail");
+        exit(1);
+      }
       if (strcmp(args[0], "cd") == 0){
         cd(args[1]);
       }
