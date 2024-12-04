@@ -40,6 +40,9 @@ void execute(char* string){
   while((function = strsep(&string, ";"))){ // splitting into multiple functions
     char* args[100];
     parse_args(function, args);
+    if(strcmp(args[0], "exit") == 0){ // exit command exit
+      exit(0);
+    }
     pid_t child; // making child to sacrifice to function
     child = fork();
     if(child<0){ // error handling
@@ -62,7 +65,11 @@ void execute(char* string){
 
 char *takeInput(){
   char buffer[256];
-  fgets(buffer, 255, stdin);
+  char *check;
+  check = fgets(buffer, 255, stdin);
+  if(check == NULL){ // Ctrl-D exit
+    exit(0);
+  }
   char* copy = (char *) malloc(256);
   sscanf(buffer, "%[^\n]", copy);
   return copy;
@@ -70,7 +77,7 @@ char *takeInput(){
 
 int main(){
   while (1){
-    printPath();
+    // printPath();
     // taking input
     char *input;
     input = takeInput();
