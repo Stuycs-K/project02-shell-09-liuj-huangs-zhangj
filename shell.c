@@ -29,6 +29,7 @@ void printPath(){
     strcat(shortCwd, "~");
     strcat(shortCwd, temp);
     printf("%s $ ", shortCwd);
+    fflush(stdout);
   }
 }
 
