@@ -24,11 +24,11 @@ void printPath(){
     printf("%s $", currCwd);
   }
   else{
-    char* shortCwd = "~/";
+    char shortCwd[256];
     char* temp = strstr(currCwd, homeCwd); 
-    printf("%s\n", temp);
-    //strcat(shortCwd, temp);
-    //printf("%s $", shortCwd);
+    strcat(shortCwd, "~");
+    strcat(shortCwd, temp);
+    printf("%s $", shortCwd);
   }
 }
 
