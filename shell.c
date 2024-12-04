@@ -57,7 +57,7 @@ void execute(char* string){
       if (strcmp(args[0], "cd") == 0){
         cd(args[1]);
       }
-      else{
+      else if (strcmp(args[0], "") != 0 || strlen(args[1]) > 0){
         int exec;
         exec = execvp(args[0], args); // child running function
         if(exec<0){ // error handling
