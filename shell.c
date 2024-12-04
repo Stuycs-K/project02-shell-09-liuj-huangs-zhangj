@@ -22,11 +22,12 @@ void printPath(){
   chdir(currCwd);
   if (strlen(currCwd) < strlen(homeCwd)){
     printf("%s $ ", currCwd);
+    fflush(stdout);
   }
   else{
     char shortCwd[256];
     char* temp = strstr(currCwd, homeCwd); 
-    strcat(shortCwd, "~");
+    shortCwd[0] = "~";
     strcat(shortCwd, temp);
     printf("%s $ ", shortCwd);
     fflush(stdout);
