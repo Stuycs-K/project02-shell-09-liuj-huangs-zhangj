@@ -40,15 +40,10 @@ void cd(char* path){
   chdir(path);
 }
 
-void redirStdout(char* path){
-  int fd1 = open(path, O_WRONLY);
-  dup(1);
-  dup2(1, fd1);
-}
-
 void execute(char* string){
   char* function;
   int argsLen;
+  int redir = 0;
   while((function = strsep(&string, ";"))){ // splitting into multiple functions
     char* args[100];
     argsLen = parse_args(function, args);
@@ -62,20 +57,28 @@ void execute(char* string){
       exit(1);
     }
     if(child == 0){
-      char* cmd;
+      char* args2[100];
+      char* path;
+      redir = 0;
       for (int i = 0; i<argsLen; i++){
-        strcat(cmd, args[i]);
-        if (args[i] == '>'){
-          char* path;
+         if (strcmp(args[i], ">") == 0){
           path = args[i+1];
-          redirStdout(path);
+          redir = 1;
+          break;
         }
+	strcpy(args2[i],args[i]);
       }
-      int exec;
-      exec = execvp(args[0], args); // child running function
-      if(exec<0){ // error handling
-        perror("fork fail");
-        exit(1);
+      if (redir == 1){
+	int fd1 = open(path, O_WRONLY | O_APPEND | O_CREAT, 0600);
+	dup(1);
+	dup2(1, fd1);
+	int exec;
+        exec = execvp(args2[0], args2);
+	close(fd1);
+	if (exec<0){
+          perror("redirect stoud fail");
+	  exit(1);
+        }
       }
       if (strcmp(args[0], "cd") == 0){
         cd(args[1]);
@@ -84,7 +87,7 @@ void execute(char* string){
         int exec;
         exec = execvp(args[0], args); // child running function
         if(exec<0){ // error handling
-          perror("fork fail");
+          perror("execvp fail");
           exit(1);
         }
       }
