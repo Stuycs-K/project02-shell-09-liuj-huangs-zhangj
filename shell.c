@@ -26,7 +26,7 @@ void printPath(){
   }
   else{
     char shortCwd[256];
-    char* temp = strstr(currCwd, homeCwd); 
+    char* temp = strstr(currCwd, homeCwd);
     strcpy(shortCwd, "");
     strcat(shortCwd, "~");
     strcat(shortCwd, temp);
@@ -54,11 +54,16 @@ void execute(char* string){
       exit(1);
     }
     if(child == 0){
-      int exec;
-      exec = execvp(args[0], args); // child running function
-      if(exec<0){ // error handling
-        perror("fork fail");
-        exit(1);
+      if (strcmp(args[0], "cd") == 0){
+        cd(args[1]);
+      }
+      else{
+        int exec;
+        exec = execvp(args[0], args); // child running function
+        if(exec<0){ // error handling
+          perror("fork fail");
+          exit(1);
+        }
       }
     }
     else{
