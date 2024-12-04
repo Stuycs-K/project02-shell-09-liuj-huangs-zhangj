@@ -26,8 +26,9 @@ void printPath(){
   else{
     char* shortCwd = "~/";
     char* temp = strstr(currCwd, homeCwd); 
-    strcat(shortCwd, temp);
-    printf("%s $", shortCwd);
+    printf("%s\n", temp);
+    //strcat(shortCwd, temp);
+    //printf("%s $", shortCwd);
   }
 }
 
@@ -77,7 +78,7 @@ char *takeInput(){
 
 int main(){
   while (1){
-    // printPath();
+    printPath();
     // taking input
     char *input;
     input = takeInput();
