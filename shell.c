@@ -21,14 +21,14 @@ void printPath(){
   getcwd(homeCwd, sizeof(homeCwd));
   chdir(currCwd);
   if (strlen(currCwd) < strlen(homeCwd)){
-    printf("%s $", currCwd);
+    printf("%s $ ", currCwd);
   }
   else{
     char shortCwd[256];
     char* temp = strstr(currCwd, homeCwd); 
     strcat(shortCwd, "~");
     strcat(shortCwd, temp);
-    printf("%s $", shortCwd);
+    printf("%s $ ", shortCwd);
   }
 }
 
