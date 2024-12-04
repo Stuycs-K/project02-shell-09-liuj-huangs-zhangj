@@ -27,7 +27,8 @@ void printPath(){
   else{
     char shortCwd[256];
     char* temp = strstr(currCwd, homeCwd); 
-    shortCwd[0] = '~';
+    strcpy(shortCwd, "");
+    strcat(shortCwd, "~");
     strcat(shortCwd, temp);
     printf("%s $ ", shortCwd);
     fflush(stdout);
