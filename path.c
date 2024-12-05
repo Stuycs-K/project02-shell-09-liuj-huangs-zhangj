@@ -17,13 +17,15 @@ void printPath(){
     printf("%s $ ", currCwd);
     fflush(stdout);
   }
+  else if (strlen(currCwd) > strlen(homeCwd)){
+    char *a = malloc(sizeof(currCwd));
+    strcpy(a, currCwd);
+    a += strlen(getenv("HOME"));
+    printf("~%s $ ", a);
+    fflush(stdout);
+  }
   else{
-    char shortCwd[256];
-    char* temp = strstr(currCwd, homeCwd);
-    strcpy(shortCwd, "");
-    strcat(shortCwd, "~");
-    strcat(shortCwd, temp);
-    printf("%s $ ", shortCwd);
+    printf("~/ $ ");
     fflush(stdout);
   }
 }

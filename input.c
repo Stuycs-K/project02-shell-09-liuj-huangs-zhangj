@@ -11,6 +11,7 @@ char *takeInput(){
   char *check;
   check = fgets(buffer, 255, stdin);
   if(check == NULL){ // Ctrl-D exit
+    printf("\n");
     exit(0);
   }
   char* copy = (char *) malloc(256);
