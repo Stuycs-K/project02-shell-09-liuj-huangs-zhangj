@@ -43,7 +43,8 @@ void cd(char* path){
 void execute(char* string){
   char* function;
   int argsLen;
-  int redir = 0;
+  int stdoutRedir = 0;
+  int stdinRedir = 0;
   while((function = strsep(&string, ";"))){ // splitting into multiple functions
     char* args[100];
     argsLen = parse_args(function, args);
@@ -57,32 +58,49 @@ void execute(char* string){
       exit(1);
     }
     if(child == 0){
-      char* args2[100];
       char* path;
-      redir = 0;
+      stdoutRedir = 0;
+      stdinRedir = 0;
       for (int i = 0; i<argsLen; i++){
-         if (strcmp(args[i], ">") == 0){
+        if (strcmp(args[i], ">") == 0){
           path = args[i+1];
-          redir = 1;
-          args2[i] = NULL;
+          stdoutRedir = 1;
+          args[i] = NULL;
           break;
         }
-	      strcpy(args2[i],args[i]);
+        if (strcmp(args[i], "<") == 0){
+          path = args[i+1];
+          stdinRedir = 1;
+          args[i] = NULL;
+          break;
+        }
       }
-      if (redir == 1){
+      if (stdoutRedir == 1){
         remove(path);
         int fd1 = open(path, O_WRONLY | O_APPEND | O_CREAT, 0600);
         dup(1);
         dup2(fd1, 1);
         int exec;
-        exec = execvp(args2[0], args2);
+        exec = execvp(args[0], args);
         close(fd1);
         if (exec<0){
-          perror("redirect stdout fail");
+          perror("stoutRedirect fail");
           exit(1);
         }
       }
-      if (strcmp(args[0], "cd") == 0){
+      else if (stdinRedir == 1){
+        int fd1 = open(path, O_WRONLY);
+        dup(0);
+        dup2(0, fd1);
+        int exec;
+        exec = execvp(args[0], args);
+        close(fd1);
+        if (exec<0){
+          perror("stdinRedirect fail");
+          exit(1);
+        }
+      }
+      else if (strcmp(args[0], "cd") == 0){
         cd(args[1]);
       }
       else{
