@@ -70,6 +70,7 @@ void execute(char* string){
 	      strcpy(args2[i],args[i]);
       }
       if (redir == 1){
+        remove(path);
         int fd1 = open(path, O_WRONLY | O_APPEND | O_CREAT, 0600);
         dup(1);
         dup2(fd1, 1);
