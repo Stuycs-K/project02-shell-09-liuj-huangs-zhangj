@@ -66,17 +66,18 @@ void execute(char* string){
           redir = 1;
           break;
         }
-	    strcpy(args2[i],args[i]);
+	      strcpy(args2[i],args[i]);
       }
       if (redir == 1){
         int fd1 = open(path, O_WRONLY | O_APPEND | O_CREAT, 0600);
         dup(1);
         dup2(fd1, 1);
+        printf("%s\n", args2[0]);
         int exec;
         exec = execvp(args2[0], args2);
         close(fd1);
         if (exec<0){
-          perror("redirect stoud fail");
+          perror("redirect stdout fail");
           exit(1);
         }
       }
