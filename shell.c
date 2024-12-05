@@ -64,6 +64,7 @@ void execute(char* string){
          if (strcmp(args[i], ">") == 0){
           path = args[i+1];
           redir = 1;
+          args2[i] = NULL;
           break;
         }
 	      strcpy(args2[i],args[i]);
@@ -72,7 +73,6 @@ void execute(char* string){
         int fd1 = open(path, O_WRONLY | O_APPEND | O_CREAT, 0600);
         dup(1);
         dup2(fd1, 1);
-        printf("%s\n", args2[0]);
         int exec;
         exec = execvp(args2[0], args2);
         close(fd1);
