@@ -5,6 +5,7 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <string.h>
+#include "execute.h"
 
 void stdoutRedirExec(char* path, char* args[]){
   remove(path);
@@ -38,6 +39,12 @@ int redir(char* args[], int argsLen){
   int stdoutRedir = 0;
   int stdinRedir = 0;
   for (int i = 0; i<argsLen; i++){
+    if (strcmp(args[i], "|") == 0){
+       MetalPipe = 1;
+       args[i] = NULL;
+       pipelocation = i;
+       break;
+   }
     if (strcmp(args[i], ">") == 0){
       path = args[i+1];
       stdoutRedir = 1;
@@ -60,4 +67,34 @@ int redir(char* args[], int argsLen){
     return 1;
   }
   return 0;
+}
+
+int pipe(char* args[]){
+  pid_t bb;
+  bb = fork();
+  if(bb < 0){
+      perror("fork fail");
+      exit(1);
+  }
+  if(bb == 0){
+      char * arg1 = malloc(sizeof(args));
+      strcpy(arg1, args[0]);
+      for(int i = 1; i < pipelocation; i++){
+          strcat(arg1, args[i]);
+      }
+      strcat(arg1, " > temp.txt");
+      execute(arg1);
+      return 0;
+  }
+  else{
+      wait(NULL);
+      char * arg2 = malloc(sizeof(args));
+      strcpy(args2, args[pipelocation+1]);
+      for(int i = pipelocation + 2; i < argslen; i++){
+          strcat(arg2, arg[i]);
+      }
+      strcat(arg2, " < temp.txt");
+      execute(arg2);
+      remove("temp.txt");
+  }
 }
