@@ -5,6 +5,7 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <string.h>
+#include "redirect.h"
 
 int parse_args( char * line, char ** arg_ary ){
   int counter = 0;
@@ -21,8 +22,7 @@ void cd(char* path){
 void execute(char* string){
   char* function;
   int argsLen;
-  int stdoutRedir = 0;
-  int stdinRedir = 0;
+  int redired;
   while((function = strsep(&string, ";"))){ // splitting into multiple functions
     char* args[100];
     argsLen = parse_args(function, args);
@@ -36,47 +36,9 @@ void execute(char* string){
       exit(1);
     }
     if(child == 0){
-      char* path;
-      stdoutRedir = 0;
-      stdinRedir = 0;
-      for (int i = 0; i<argsLen; i++){
-        if (strcmp(args[i], ">") == 0){
-          path = args[i+1];
-          stdoutRedir = 1;
-          args[i] = NULL;
-          break;
-        }
-        if (strcmp(args[i], "<") == 0){
-          path = args[i+1];
-          stdinRedir = 1;
-          args[i] = NULL;
-          break;
-        }
-      }
-      if (stdoutRedir == 1){
-        remove(path);
-        int fd1 = open(path, O_WRONLY | O_APPEND | O_CREAT, 0600);
-        dup(1);
-        dup2(fd1, 1);
-        int exec;
-        close(fd1);
-        exec = execvp(args[0], args);
-        if (exec<0){
-          perror("stoutRedirect fail");
-          exit(1);
-        }
-      }
-      else if (stdinRedir == 1){
-        int fd1 = open(path, O_RDONLY);
-        dup(0);
-        dup2(fd1, 0);
-        int exec;
-        close(fd1);
-        exec = execvp(args[0], args);
-        if (exec<0){
-          perror("stdinRedirect fail");
-          exit(1);
-        }
+      redired = redir(args, argsLen);
+      if (redired == 1){
+        printf("hi\n");
       }
       else if (strcmp(args[0], "cd") == 0){
         cd(args[1]);
