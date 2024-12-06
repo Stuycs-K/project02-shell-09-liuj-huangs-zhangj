@@ -22,7 +22,6 @@ void cd(char* path){
 void execute(char* string){
   char* function;
   int argsLen;
-  int redired;
   while((function = strsep(&string, ";"))){ // splitting into multiple functions
     char* args[100];
     argsLen = parse_args(function, args);
