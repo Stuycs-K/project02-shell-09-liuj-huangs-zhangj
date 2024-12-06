@@ -81,20 +81,21 @@ void execute(char* string){
         dup(1);
         dup2(fd1, 1);
         int exec;
-        exec = execvp(args[0], args);
         close(fd1);
+        exec = execvp(args[0], args);
+        
         if (exec<0){
           perror("stoutRedirect fail");
           exit(1);
         }
       }
       else if (stdinRedir == 1){
-        int fd1 = open(path, O_WRONLY);
+        int fd1 = open(path, O_RDONLY);
         dup(0);
-        dup2(0, fd1);
+        dup2(fd1, 0);
         int exec;
-        exec = execvp(args[0], args);
         close(fd1);
+        exec = execvp(args[0], args);
         if (exec<0){
           perror("stdinRedirect fail");
           exit(1);
