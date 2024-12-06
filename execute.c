@@ -37,10 +37,7 @@ void execute(char* string){
     }
     if(child == 0){
       redired = redir(args, argsLen);
-      if (redired == 1){
-        printf("hi\n");
-      }
-      else if (strcmp(args[0], "cd") == 0){
+      if (strcmp(args[0], "cd") == 0){
         cd(args[1]);
       }
       else if(strcmp(args[0], "") != 0 || strlen(args[1]) > 0){
