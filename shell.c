@@ -83,7 +83,6 @@ void execute(char* string){
         int exec;
         close(fd1);
         exec = execvp(args[0], args);
-        
         if (exec<0){
           perror("stoutRedirect fail");
           exit(1);
