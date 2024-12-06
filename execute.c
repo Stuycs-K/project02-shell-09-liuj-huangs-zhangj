@@ -35,7 +35,7 @@ void execute(char* string){
       exit(1);
     }
     if(child == 0){
-      redired = redir(args, argsLen);
+      redir(args, argsLen);
       if (strcmp(args[0], "cd") == 0){
         cd(args[1]);
       }
