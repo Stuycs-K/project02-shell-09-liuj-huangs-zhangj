@@ -29,28 +29,30 @@ void execute(char* string){
     if(strcmp(args[0], "exit") == 0){ // exit command exit
       exit(0);
     }
-    pid_t child; // making child to sacrifice to function
-    child = fork();
-    if(child<0){ // error handling
-      perror("fork fail");
-      exit(1);
-    }
-    if(child == 0){
-      redired = redir(args, argsLen);
-      if (strcmp(args[0], "cd") == 0){
+    if (strcmp(args[0], "cd") == 0){
         cd(args[1]); //cd command cd
-      }
-      else if(strcmp(args[0], "") != 0 || strlen(args[1]) > 0){
-        int exec;
-        exec = execvp(args[0], args); // child running function
-        if(exec<0){ // error handling
-          perror("execvp fail");
-          exit(1);
-        }
-      }
     }
     else{
-      wait(NULL); // awaiting child death
+      pid_t child; // making child to sacrifice to function
+      child = fork();
+      if(child<0){ // error handling
+        perror("fork fail");
+        exit(1);
+      }
+      if(child == 0){
+        redired = redir(args, argsLen);
+        if(strcmp(args[0], "") != 0 || strlen(args[1]) > 0){
+          int exec;
+          exec = execvp(args[0], args); // child running function
+          if(exec<0){ // error handling
+            perror("execvp fail");
+            exit(1);
+          }
+        }
+      }
+      else{
+        wait(NULL); // awaiting child death
+      }
     }
   }
 }
