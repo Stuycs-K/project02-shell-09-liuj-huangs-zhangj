@@ -9,9 +9,10 @@
 void printPath(){
   char currCwd[256];
   char homeCwd[256];
+  char beginning[256];
   getcwd(currCwd, sizeof(currCwd)); //Get path of current working directory
   strcpy(homeCwd, getenv("HOME")); //Get path of home directory
-  if (strlen(currCwd) < strlen(homeCwd)){ //If current comes before home
+  if (strlen(currCwd) < strlen(homeCwd) || strcmp((strncat(beginning, currCwd, strlen(homeCwd))), homeCwd) != 0){ //If current comes before home
     printf("%s $ ", currCwd);
     fflush(stdout);
   }
