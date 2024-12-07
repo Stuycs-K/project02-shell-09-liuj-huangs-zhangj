@@ -34,14 +34,14 @@ void stdinRedirExec(char* path, char* args[]){
   }
 }
 
-int PipeRedirExec(char* args[], int pipeLocation, int argsLen){
+void PipeRedirExec(char* args[], int pipeLocation, int argsLen){ // takes in a list comprised of command lines in order to run |, pipelocation and argsLen are used for internal code and is where the pipe is and the length of the total command.
   pid_t bb;
   bb = fork();
   if(bb < 0){
       perror("fork fail");
       exit(1);
   }
-  if(bb == 0){
+  if(bb == 0){ // Creates a temp.txt and redirects the function into it
     remove("temp.txt");
     int fd1 = open("temp.txt", O_WRONLY | O_APPEND | O_CREAT, 0600);
     dup(1);
@@ -59,22 +59,21 @@ int PipeRedirExec(char* args[], int pipeLocation, int argsLen){
     }
 
     int len = parse_args(arg1, args1input);
-    if(len > 1 && strcmp(args1input[1],"<") == 0){
+    if(len > 1 && strcmp(args1input[1],"<") == 0){ // alternative for if < is present
       char* newarg1input[100];
       for(int i = 0; i < len-2; i++){
         newarg1input[i] = args1input[i];
       }
       stdinRedirExec(args1input[len - 1], newarg1input);
-    }else{
+    }else{ // regular execution when no < is present
       exec = execvp(args1input[0], args1input);
       if (exec<0){
-        perror("stoutRedirect fail: error A");
+        perror("stoutRedirect fail");
         exit(1);
       }
     }
-    return 0;
   }
-  else{
+  else{ // Takes input from temp.txt and redirects it into a function
       wait(NULL);
 
       int fd1 = open("temp.txt", O_RDONLY);
@@ -98,9 +97,9 @@ int PipeRedirExec(char* args[], int pipeLocation, int argsLen){
       }
 
       int len = parse_args(arg2, args2input);
-      remove("temp.txt");
+      remove("temp.txt"); // removing temp.txt
 
-      if(foundredir == 0){
+      if(foundredir == 0){ // modification for if final result is redirected into a file via >
         remove(args[len+2+pipeLocation]);
         int f = open(args[len+2+pipeLocation], O_WRONLY | O_APPEND | O_CREAT, 0600);
         dup(1);
@@ -109,21 +108,19 @@ int PipeRedirExec(char* args[], int pipeLocation, int argsLen){
       }
       exec = execvp(args2input[0], args2input);
       if (exec<0){
-        perror("stdinRedirect fail: error B");
+        perror("stdinRedirect fail");
         exit(1);
       }
-      
-      return 0;
   }
 }
 
-int redir(char* args[], int argsLen){
+int redir(char* args[], int argsLen){ // takes in a set of arguements and length of set and performs redirects, if successful return 1 else return 0
   char* path;
   int MetalPipe = 0;
   int pipeLocation = 0;
   int stdoutRedir = 0;
   int stdinRedir = 0;
-  for (int i = 0; i<argsLen; i++){
+  for (int i = 0; i<argsLen; i++){ // locate pipe if it exists
     if (strcmp(args[i], "|") == 0){
         MetalPipe = 1;
         args[i] = NULL;
@@ -131,7 +128,7 @@ int redir(char* args[], int argsLen){
         break;
     }
   }
-  if(MetalPipe != 1){
+  if(MetalPipe != 1){ // override if pipe exists
     for (int i = 0; i<argsLen; i++){
       if(MetalPipe == 1){
         break;

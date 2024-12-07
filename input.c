@@ -6,7 +6,7 @@
 #include <errno.h>
 #include <string.h>
 
-char *takeInput(){
+char *takeInput(){ // returns the line taken from standard in
   char buffer[256];
   char *check;
   check = fgets(buffer, 255, stdin);
@@ -15,6 +15,6 @@ char *takeInput(){
     exit(0);
   }
   char* copy = (char *) malloc(256);
-  sscanf(buffer, "%[^\n]", copy);
+  sscanf(buffer, "%[^\n]", copy); // removing unecessary \n
   return copy;
 }
