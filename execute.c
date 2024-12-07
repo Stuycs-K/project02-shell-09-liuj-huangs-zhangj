@@ -30,7 +30,12 @@ void execute(char* string){
       exit(0);
     }
     if (strcmp(args[0], "cd") == 0){
+      if (args[1] == NULL || strcmp(args[1], "~") == 0){
+        cd(getenv("HOME"));
+      }
+      else{
         cd(args[1]); //cd command cd
+      }
     }
     else{
       pid_t child; // making child to sacrifice to function
