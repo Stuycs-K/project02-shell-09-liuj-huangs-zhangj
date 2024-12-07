@@ -38,7 +38,7 @@ void execute(char* string){
     if(child == 0){
       redired = redir(args, argsLen);
       if (strcmp(args[0], "cd") == 0){
-        cd(args[1]);
+        cd(args[1]); //cd command cd
       }
       else if(strcmp(args[0], "") != 0 || strlen(args[1]) > 0){
         int exec;

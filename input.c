@@ -15,6 +15,6 @@ char *takeInput(){
     exit(0);
   }
   char* copy = (char *) malloc(256);
-  sscanf(buffer, "%[^\n]", copy);
+  sscanf(buffer, "%[^\n]", copy); //Remove ending newline for formatting
   return copy;
 }
