@@ -25,22 +25,8 @@
 **6. Other Comments:**
 
 **7. Function Headers:**
-shell.c:
-int main();
-
-input.c:
-char *takeInput();
-
-path.c:
-void printPath();
-
-execute.c:
-void parse_args( char * line, char ** arg_ary );
-void cd(char* path);
-void execute(char* string);
-
-redirect.c:
-void stdoutRedirExec(char* path, char* args[]);
-void stdinRedirExec(char* path, char* args[]);
-void PipeRedirExec(char* args[], int pipeLocation, int argsLen);
-int redir(char* args[], int argsLen);
+- shell.c: int main();
+- input.c: char *takeInput();
+- path.c: void printPath();
+- execute.c: void parse_args( char * line, char ** arg_ary ); void cd(char* path); void execute(char* string);
+- redirect.c: void stdoutRedirExec(char* path, char* args[]); void stdinRedirExec(char* path, char* args[]); void PipeRedirExec(char* args[], int pipeLocation, int argsLen); int redir(char* args[], int argsLen);
