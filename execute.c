@@ -25,6 +25,9 @@ void execute(char* string){ // takes in a command line and runs the function cal
   int redired;
   while((function = strsep(&string, ";"))){ // splitting into multiple functions
     char* args[100];
+    for(int i = 0; i < 100; i++){
+      args[i] = NULL;
+    }
     argsLen = parse_args(function, args);
     if(strcmp(args[0], "exit") == 0){ // exit command 
       exit(0);
