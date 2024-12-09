@@ -26,37 +26,39 @@ void execute(char* string){
   while((function = strsep(&string, ";"))){ // splitting into multiple functions
     char* args[100];
     argsLen = parse_args(function, args);
-    if(strcmp(args[0], "exit") == 0){ // exit command exit
+    if(strcmp(args[0], "exit") == 0){ // exit command 
       exit(0);
     }
-    if (strcmp(args[0], "cd") == 0){
+    if (strcmp(args[0], "cd") == 0){ //cd command 
       if (args[1] == NULL || strcmp(args[1], "~") == 0){
         cd(getenv("HOME"));
       }
       else{
-        cd(args[1]); //cd command cd
+        cd(args[1]); 
       }
     }
     else{
-      pid_t child; // making child to sacrifice to function
+      pid_t child; // making child to sacrifice to executing command
       child = fork();
       if(child<0){ // error handling
         perror("fork fail");
         exit(1);
       }
-      if(child == 0){
+      if(child == 0){ // Child executes command
         redired = redir(args, argsLen);
-        if(strcmp(args[0], "") != 0 || strlen(args[1]) > 0){
-          int exec;
-          exec = execvp(args[0], args); // child running function
-          if(exec<0){ // error handling
-            perror("execvp fail");
-            exit(1);
+        if (redired == 0){ // Check if a redirect command was already executed
+          if(strcmp(args[0], "") != 0 || strlen(args[1]) > 0){
+            int exec;
+            exec = execvp(args[0], args); // Execute command
+            if(exec<0){ // error handling
+              perror("execvp fail");
+              exit(1);
+            }
           }
         }
       }
       else{
-        wait(NULL); // awaiting child death
+        wait(NULL); // parent awaits child death
       }
     }
   }
