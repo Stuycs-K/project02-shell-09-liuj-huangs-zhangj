@@ -10,19 +10,27 @@
 void stdoutRedirExec(char* path, char* args[]){ // takes in a list of arguments for a command and the path of the file to redirect stdout to, returns void, redirects stdout to the specified file and executes the command with the given args, obtains path and args from redir which parses the command line
   remove(path); // Overwrite file if it exists
   int fd1 = open(path, O_WRONLY | O_APPEND | O_CREAT, 0600); 
+  if (fd1 < 0){ // error handling for file to redirect stdout to
+    perror("stdoutRedirect fail");
+    exit(1);
+  }
   dup(1); // Redirect stdout (1) to the specified file
   dup2(fd1, 1);
   int exec;
   close(fd1);
   exec = execvp(args[0], args); // Execute the command with the given args
   if (exec<0){ // Error handling for executed command
-    perror("stoutRedirect fail");
+    perror("stdoutRedirect fail");
     exit(1);
   }
 }
 
 void stdinRedirExec(char* path, char* args[]){ // takes in a list of arguments for a command and the path of the file to redirect stdin to, returns void, redirects stdin to the specified file and executes the command with the given args, obtains path and args from redir which parses the command line
   int fd1 = open(path, O_RDONLY); // Open the specified file in preparation to read from it
+  if (fd1 < 0){ // error handling for file to redirect stdin to
+    perror("stdinRedirect fail");
+    exit(1);
+  }
   dup(0); // Redirect stdin (0) to the specified file
   dup2(fd1, 0);
   int exec;
@@ -68,7 +76,7 @@ void PipeRedirExec(char* args[], int pipeLocation, int argsLen){ // takes in a l
     }else{ // regular execution when no < is present
       exec = execvp(args1input[0], args1input);
       if (exec<0){
-        perror("stoutRedirect fail");
+        perror("stdoutRedirect fail");
         exit(1);
       }
     }
