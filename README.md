@@ -23,6 +23,7 @@
 **5. Known Bugs:**
 
 **6. Other Comments:**
+- When using a text file as input for ./shell the print format is weird, some line breaks are missing and multiple commands in one line causes weird print orders (especially with cd involved), not sure if this counts as bug or not since the commands execute properly and line endings are wack
 
 **7. Function Headers:**
 - shell.c: int main();
