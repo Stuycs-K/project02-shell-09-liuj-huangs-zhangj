@@ -14,15 +14,18 @@ void printPath(){ // Takes in no args, returns void, grabs the path of the worki
   strcpy(homeCwd, getenv("HOME")); //Get path of home directory
   if (strlen(currCwd) < strlen(homeCwd) || strcmp((strncat(beginning, currCwd, strlen(homeCwd))), homeCwd) != 0){
     //If current is shorter than home or current doesn't start with home print full path
+    printf("first: %d\n", (strlen(currCwd) < strlen(homeCwd)));
+    printf("second: %d", (strcmp((strncat(beginning, currCwd, strlen(homeCwd))), homeCwd) != 0));
     printf("%s $ ", currCwd);
     fflush(stdout);
   }
   else if (strlen(currCwd) > strlen(homeCwd)){ 
     //If current is a part of home replace home path with ~
-    char *a = malloc(sizeof(currCwd));
+    char *a = malloc(256);
     strcpy(a, currCwd);
-    a += strlen(getenv("HOME"));
-    printf("~%s $ ", a);
+    char *b = a + strlen(getenv("HOME"));
+    printf("~%s $ ", b);
+    free(a);
     fflush(stdout);
   }
   else{ 
