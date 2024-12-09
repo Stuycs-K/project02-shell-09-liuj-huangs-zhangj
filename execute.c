@@ -7,7 +7,7 @@
 #include <string.h>
 #include "redirect.h"
 
-int parse_args( char * line, char ** arg_ary ){ // takes in a command line and puts its arguements in an array (arg_ary)
+int parse_args( char * line, char ** arg_ary ){ // takes in a command line and puts its arguments in an array (arg_ary) to use for execvp, returns the length of the array it creates (used for redirect command parsing)
   int counter = 0;
   while((arg_ary[counter] = strsep(&line, " "))){
     counter++;
@@ -15,11 +15,11 @@ int parse_args( char * line, char ** arg_ary ){ // takes in a command line and p
   return counter;
 }
 
-void cd(char* path){
+void cd(char* path){ // Takes in the path of a directory and changes the working directory to that directory (so that cd command works), returns void
   chdir(path);
 }
 
-void execute(char* string){ // takes in a command line and runs the function calls on it
+void execute(char* string){ // takes in a command line, splits it into each command by semicolon, parses the args of each command, creates a child to execvp the command, returns void
   char* function;
   int argsLen;
   int redired;
@@ -48,7 +48,7 @@ void execute(char* string){ // takes in a command line and runs the function cal
         exit(1);
       }
       if(child == 0){ // Child executes command
-        redired = redir(args, argsLen);
+        redired = redir(args, argsLen); // Check if there is a redirect, and if so execute it
         if (redired == 0){ // Check if a redirect command was already executed
           if(strcmp(args[0], "") != 0 || strlen(args[1]) > 0){
             int exec;
