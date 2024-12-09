@@ -14,7 +14,7 @@ char *takeInput(){
     printf("\n");
     exit(0);
   }
-  char* copy = (char *) malloc(256);
-  sscanf(buffer, "%[^\n]", copy); // removing unecessary \n
+  char* copy = (char *) calloc(256, sizeof(char));
+  strncpy(copy, check, strlen(check)-1); // removing unecessary \n
   return copy;
 }

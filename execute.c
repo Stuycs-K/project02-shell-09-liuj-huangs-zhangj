@@ -7,7 +7,7 @@
 #include <string.h>
 #include "redirect.h"
 
-int parse_args( char * line, char ** arg_ary ){
+int parse_args( char * line, char ** arg_ary ){ // takes in a command line and puts its arguements in an array (arg_ary)
   int counter = 0;
   while((arg_ary[counter] = strsep(&line, " "))){
     counter++;
@@ -19,12 +19,15 @@ void cd(char* path){
   chdir(path);
 }
 
-void execute(char* string){
+void execute(char* string){ // takes in a command line and runs the function calls on it
   char* function;
   int argsLen;
   int redired;
   while((function = strsep(&string, ";"))){ // splitting into multiple functions
     char* args[100];
+    for(int i = 0; i < 100; i++){
+      args[i] = NULL;
+    }
     argsLen = parse_args(function, args);
     if(strcmp(args[0], "exit") == 0){ // exit command 
       exit(0);
