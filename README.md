@@ -14,6 +14,9 @@
 - Printing the path before the prompt
 - Shortening the path to replace the home directory with ~
 - Quitting the shell using the exit command or by pressing ctrl + D
+- Commands with 1 redirection operator (either > or <)
+- Commands with 1 pipe (|) using a temp file
+- Taking commands from a text file and running them (./shell < lines.txt)
 
 **4. Attempted Unsuccessful Features:**
 
@@ -22,16 +25,22 @@
 **6. Other Comments:**
 
 **7. Function Headers:**
-Shell.c:
+shell.c:
 int main();
 
-Input.c:
+input.c:
 char *takeInput();
 
-Path.c:
+path.c:
 void printPath();
 
-Execute.c:
+execute.c:
 void parse_args( char * line, char ** arg_ary );
 void cd(char* path);
 void execute(char* string);
+
+redirect.c:
+void stdoutRedirExec(char* path, char* args[]);
+void stdinRedirExec(char* path, char* args[]);
+void PipeRedirExec(char* args[], int pipeLocation, int argsLen);
+int redir(char* args[], int argsLen);
