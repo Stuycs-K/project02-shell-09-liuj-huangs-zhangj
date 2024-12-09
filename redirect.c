@@ -51,7 +51,7 @@ void PipeRedirExec(char* args[], int pipeLocation, int argsLen){ // takes in a l
 
     char* args1input[100];
 
-    char * arg1 = malloc(sizeof(args));
+    char * arg1 = malloc(10000);
     strcpy(arg1, args[0]);
     for(int i = 1; i < pipeLocation; i++){
       strcat(arg1, " ");
@@ -84,7 +84,7 @@ void PipeRedirExec(char* args[], int pipeLocation, int argsLen){ // takes in a l
 
       char* args2input[100];
 
-      char * arg2 = malloc(sizeof(args));
+      char * arg2 = malloc(10000);
       strcpy(arg2, args[pipeLocation+1]);
       int foundredir = 1;
       for(int i = pipeLocation + 2; i < argsLen; i++){
