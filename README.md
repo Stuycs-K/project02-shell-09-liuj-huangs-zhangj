@@ -18,6 +18,7 @@
 - Commands with 1 pipe (|) using a temp file
 - Commands with both pipes and redirects (up to 1 of each like a < c.txt | b  > d.txt)
 - Taking commands from a text file and running them (./shell < lines.txt)
+- Error handling if commands fail to execute
 
 **4. Attempted Unsuccessful Features:**
 
