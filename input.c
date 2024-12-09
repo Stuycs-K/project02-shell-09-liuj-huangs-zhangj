@@ -6,7 +6,7 @@
 #include <errno.h>
 #include <string.h>
 
-char *takeInput(){ // returns the line taken from standard in
+char *takeInput(){ 
   char buffer[256];
   char *check;
   check = fgets(buffer, 255, stdin);

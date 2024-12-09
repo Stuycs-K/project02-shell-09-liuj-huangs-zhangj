@@ -7,34 +7,34 @@
 #include <string.h>
 #include "execute.h"
 
-void stdoutRedirExec(char* path, char* args[]){
-  remove(path);
-  int fd1 = open(path, O_WRONLY | O_APPEND | O_CREAT, 0600);
-  dup(1);
+void stdoutRedirExec(char* path, char* args[]){ // takes in a list of arguments for a command and the path of the file to redirect stdout to, returns void, redirects stdout to the specified file and executes the command with the given args, obtains path and args from redir which parses the command line
+  remove(path); // Overwrite file if it exists
+  int fd1 = open(path, O_WRONLY | O_APPEND | O_CREAT, 0600); 
+  dup(1); // Redirect stdout (1) to the specified file
   dup2(fd1, 1);
   int exec;
   close(fd1);
-  exec = execvp(args[0], args);
-  if (exec<0){
+  exec = execvp(args[0], args); // Execute the command with the given args
+  if (exec<0){ // Error handling for executed command
     perror("stoutRedirect fail");
     exit(1);
   }
 }
 
-void stdinRedirExec(char* path, char* args[]){
-  int fd1 = open(path, O_RDONLY);
-  dup(0);
+void stdinRedirExec(char* path, char* args[]){ // takes in a list of arguments for a command and the path of the file to redirect stdin to, returns void, redirects stdin to the specified file and executes the command with the given args, obtains path and args from redir which parses the command line
+  int fd1 = open(path, O_RDONLY); // Open the specified file in preparation to read from it
+  dup(0); // Redirect stdin (0) to the specified file
   dup2(fd1, 0);
   int exec;
   close(fd1);
-  exec = execvp(args[0], args);
-  if (exec<0){
+  exec = execvp(args[0], args); // Execute the command with the given args
+  if (exec<0){ // Error handling for executed command
     perror("stdinRedirect fail");
     exit(1);
   }
 }
 
-void PipeRedirExec(char* args[], int pipeLocation, int argsLen){ // takes in a list comprised of command lines in order to run |, pipelocation and argsLen are used for internal code and is where the pipe is and the length of the total command.
+void PipeRedirExec(char* args[], int pipeLocation, int argsLen){ // takes in a list comprised of command lines in order to run |, pipelocation and argsLen are used for internal code and is where the pipe is and the length of the total command, returns void
   pid_t bb;
   bb = fork();
   if(bb < 0){
@@ -114,7 +114,7 @@ void PipeRedirExec(char* args[], int pipeLocation, int argsLen){ // takes in a l
   }
 }
 
-int redir(char* args[], int argsLen){ // takes in a set of arguements and length of set and performs redirects, if successful return 1 else return 0
+int redir(char* args[], int argsLen){ // takes in a set of arguements and length of the set of args and parses the args to find redirects (<, >, |) then executes them if they exist, if a redirect exists in the command and is executed successfully return 1 else return 0 (used so execute.c knows if a command with a redirect was executed)
   char* path;
   int MetalPipe = 0;
   int pipeLocation = 0;
@@ -133,20 +133,21 @@ int redir(char* args[], int argsLen){ // takes in a set of arguements and length
       if(MetalPipe == 1){
         break;
       }
-      if (strcmp(args[i], ">") == 0){
+      if (strcmp(args[i], ">") == 0){ // If output redirect exists but pipe doesn't
         path = args[i+1];
         stdoutRedir = 1;
         args[i] = NULL;
         break;
       }
-      if (strcmp(args[i], "<") == 0){
-        path = args[i+1];
+      if (strcmp(args[i], "<") == 0){ // If input redirect exists but pipe doesn't
+        path = args[i+1]; 
         stdinRedir = 1;
         args[i] = NULL;
         break;
       }
     }
   }
+  // Execute the command based on if it contains a pipe, only contains a >, or only contains a <
   if (MetalPipe == 1){
     PipeRedirExec(args, pipeLocation, argsLen);
     return 1;

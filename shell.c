@@ -9,13 +9,14 @@
 #include "input.h"
 #include "path.h"
 
-int main(){
+int main(){ // Main function, runs forever until exit or ctrl+D, takes no args and returns 0 if it exits normally and 1 if it exits through an error
   while (1){
+    // Print shell prompt
     printPath();
-    // taking input
+    // Taking input
     char *input;
     input = takeInput();
-    // executing method
+    // Executing command
     execute(input);
   }
   return 0;
