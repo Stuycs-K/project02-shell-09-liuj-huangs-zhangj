@@ -16,7 +16,11 @@ int parse_args( char * line, char ** arg_ary ){ // takes in a command line and p
 }
 
 void cd(char* path){ // Takes in the path of a directory and changes the working directory to that directory (so that cd command works), returns void
-  chdir(path);
+  int error = chdir(path); // Change working directory
+  if (error<0){ // Check if path to cd into is actually a directory that you can cd into
+    perror("cd fail");
+    exit(1);
+  }
 }
 
 void execute(char* string){ // takes in a command line, splits it into each command by semicolon, parses the args of each command, creates a child to execvp the command, returns void
