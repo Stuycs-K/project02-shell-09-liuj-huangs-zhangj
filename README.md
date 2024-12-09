@@ -16,6 +16,7 @@
 - Quitting the shell using the exit command or by pressing ctrl + D
 - Commands with 1 redirection operator (either > or <)
 - Commands with 1 pipe (|) using a temp file
+- Commands with both pipes and redirects (up to 1 of each like a < c.txt | b  > d.txt)
 - Taking commands from a text file and running them (./shell < lines.txt)
 
 **4. Attempted Unsuccessful Features:**
