@@ -1,3 +1,4 @@
 ls
 echo 1 2 3
 echo 1;echo 6
+ls;ls -a -l
